@@ -46,7 +46,7 @@ class Wireless:
         if len(response) > 0 and 'not found' not in response:
             response = cmd('nmcli --version')
             parts = response.split()
-            ver = parts[-1]
+            ver = parts[-3].replace("-3,","")
             compare = self.vercmp(ver, "0.9.9.0")
             if compare >= 0:
                 return 'nmcli0990'
@@ -66,6 +66,8 @@ class Wireless:
         raise Exception('Unable to find compatible wireless driver.')
 
     def vercmp(self, actual, test):
+        def cmp(a, b):
+            return (a > b) - (a < b)
         def normalize(v):
             return [int(x) for x in re.sub(r'(\.0+)*$', '', v).split(".")]
         return cmp(normalize(actual), normalize(test))
